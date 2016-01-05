@@ -56,14 +56,12 @@ html
             }
 
             var moveDownAction = function(index) {
-                console.log("moveDownButtonAction" + index.toString());
+                switchPositions(index, 1);
 
                 updateButtons();
             }
 
             var moveUpAction = function(index) {
-                console.log("moveUpButtonAction" + index.toString());
-
                 switchPositions(index, -1);
 
                 updateButtons();
@@ -217,7 +215,7 @@ html
                     indexFromPosition[index] = index;
 
                     addLink(playlist[song], index);
-                    
+
                     if (index == 1) {
                         previewAction(index);
                     }
