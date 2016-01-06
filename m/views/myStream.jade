@@ -7,13 +7,18 @@ html
         link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css", rel="stylesheet")
     body
 
-        script( src='//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js' )
-        script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js' )
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+        script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+        script(src="https://www.youtube.com/iframe_api")
 
         script.
             var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
 
             var currentPreview;
+
+            var youtubePlayers = [];
+            var currentlyPlayingIndex;
+            var youtubeAPIIsReady = false;
 
             var positionFromIndex = {}; // index : position
             var indexFromPosition = {}; // position : index
@@ -42,7 +47,11 @@ html
                 // console.log("indexFromPosition = " + JSON.stringify(indexFromPosition));
             }
 
-            var previewAction = function(index) {
+            var previewAction = function(index, playAutomatically) {
+                if(typeof playAutomatically == "undefined") {
+                    playAutomatically = false;
+                }
+
                 // hide preview at current index
                 if (currentPreview != null) {
                     document.getElementById("hide-preview-button" + currentPreview.toString()).style.display = "none";
@@ -53,9 +62,13 @@ html
                 document.getElementById("hide-preview-button" + index.toString()).style.display = "block";
                 document.getElementById("preview-panel" + index.toString()).style.display = "block";
 
-                $('#youtube-frame' + index.toString()).replaceWith('<iframe src="https://www.youtube.com/embed/B2jVbSI9H4o" allowfullscreen></iframe>');
-
                 currentPreview = index;
+
+                if(getPlayer(index) == null) {
+                    if (youtubeAPIIsReady) {
+                        addPlayer(index, playAutomatically);
+                    }
+                }
             }
 
             var moveDownAction = function(index) {
@@ -94,6 +107,10 @@ html
 
                 positionFromIndex = newPositionFromIndex;
                 indexFromPosition = newIndexFromPosition;
+
+                if(deleteIndex == currentPreview) {
+                    currentPreview = null;
+                }
 
                 updateButtons();
 
@@ -143,7 +160,7 @@ html
                                     '<div class="row" style="padding: 2px 20px 2px 20px;">' +
                                         '<div class="col-md-7" style="padding: 0px;">' +
                                             '<div class="embed-responsive embed-responsive-16by9" style="margin-right: 10px;">' +
-                                                '<iframe id="youtube-frame' + index.toString() + '"></iframe>' +
+                                                '<div id="youtube-frame' + index.toString() + '"></div>' +
                                             '</div>' +
                                         '</div>' +
                                         '<div class="col-md-5 well" style="padding: 10px 18px;">' +
@@ -184,6 +201,81 @@ html
                 updateButtons();
             };
 
+            // youtube player api
+
+            function addPlayer(index, autoplay) {
+                if(typeof autoplay == "undefined") {
+                    autoplay = 0;
+                } else if(autoplay == false) {
+                    autoplay = 0;
+                } else if(autoplay == true) {
+                    autoplay = 1;
+                }
+
+                youtubePlayers.push(new YT.Player("youtube-frame" + index.toString(), {
+                    videoId: "B2jVbSI9H4o",
+                    playerVars: {
+                        autoplay: autoplay
+                    },
+                    events: {
+                        "onReady": onPlayerReady,
+                        "onStateChange": onStateChange
+                    }
+                }));
+
+                currentlyPlayingIndex = index;
+            }
+
+            function getPlayer(index) {
+                console.log(youtubePlayers);
+                for(player in youtubePlayers) {
+                    var panelId = youtubePlayers[player]["f"].id;
+                    var id = parseInt(panelId.substring(13), 10);
+                    if(id == index) {
+                        return player;
+                    }
+                }
+                return null;
+            }
+
+            function parsePlayerId(embedCode) {
+                return parseInt(embedCode.substring(25, embedCode.indexOf(" frameborder") - 1), 10);
+            }
+
+            function onYouTubeIframeAPIReady() {
+                addPlayer(1);
+                youtubeAPIIsReady = true;
+            }
+
+            function onPlayerReady(event) {
+
+            }
+
+            function onStateChange(event) {
+                // YT.PlayerState.UNSTARTED
+                // YT.PlayerState.ENDED
+                // YT.PlayerState.PLAYING
+                // YT.PlayerState.PAUSED
+                // YT.PlayerState.BUFFERING
+                // YT.PlayerState.CUED
+
+                if(event.data == YT.PlayerState.ENDED) {
+                    var nextPanelPosition = positionFromIndex[currentlyPlayingIndex] + 1
+                    var nextPanelIndex = indexFromPosition[nextPanelPosition];
+                    console.log(nextPanelIndex.toString());
+                    deleteAction(currentlyPlayingIndex);
+                    if(typeof nextPanelPosition != "undefined") {
+                        previewAction(nextPanelIndex, true)
+                    }
+                }
+                if(event.data == YT.PlayerState.PLAYING) {
+                    for(player in youtubePlayers) {
+                        var embedCode = event.target.getVideoEmbedCode();
+                        var id = parsePlayerId(embedCode);
+                    }
+                }
+            }
+
         nav.navbar.navbar-default(role="navigation")
             .navbar-header
                 button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar-inverse", aria-expanded="false", aria-controls="navbar")
@@ -202,13 +294,6 @@ html
                             span.caret
                         ul.dropdown-menu(role="menu")
                             li: a(href="#") Sign Out
-                            //
-                                li: a(href="#") Another action
-                                li: a(href="#") Something else here
-                                li.divider
-                                li.dropdown-header Nav header
-                                li: a(href="#") Separated link
-                                li: a(href="#") One more separated link
         div.container(id="playlist-container")
             script.
                 var index = 0;
