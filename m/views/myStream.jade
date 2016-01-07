@@ -130,7 +130,7 @@ html
             var hidePreviewAction = function(index) {
                 document.getElementById("hide-preview-button" + index.toString()).style.display = "none";
                 document.getElementById("preview-panel" + index.toString()).style.display = "none";
-                currentPreview = index;
+                currentPreview = null;
             }
 
             var addCustomLinkAction = function() {
@@ -148,6 +148,23 @@ html
                 addLink(linkObj, Object.keys(indexFromPosition).length + 1);
 
                 $("#custom-link-container").hide();
+            }
+
+            var playPauseAction = function () {
+                if (currentlyPlayingIndex != null) {
+                    getPlayer(currentlyPlayingIndex).pauseVideo();
+                } else {
+                    if (currentPreview != null) {
+                        getPlayer(currentPreview).playVideo();
+                    } else {
+                        if(getPlayer(indexFromPosition[1]) != null) {
+                            previewAction(indexFromPosition[1]);
+                            getPlayer(indexFromPosition[1]).playVideo();
+                        } else {
+                            previewAction(indexFromPosition[1], true);
+                        }
+                    }
+                }
             }
 
             var updateButtons = function() {
@@ -301,6 +318,8 @@ html
                 // YT.PlayerState.BUFFERING
                 // YT.PlayerState.CUED
 
+                var glyphicon = $("#play-pause-button")
+
                 if(event.data == YT.PlayerState.ENDED) {
                     var nextPanelPosition = positionFromIndex[currentlyPlayingIndex] + 1
                     var nextPanelIndex = indexFromPosition[nextPanelPosition];
@@ -309,6 +328,8 @@ html
                     if(typeof nextPanelPosition != "undefined") {
                         previewAction(nextPanelIndex, true)
                     }
+                    currentlyPlayingIndex = null;
+                    glyphicon.attr("class", "glyphicon glyphicon-play");
                 }
                 if(event.data == YT.PlayerState.PLAYING) { // TODO make more efficient by keeping track of the single video that is playing
                     var embedCode = event.target.getVideoEmbedCode();
@@ -319,6 +340,12 @@ html
                     }
 
                     currentlyPlayingIndex = id;
+
+                    glyphicon.attr("class", "glyphicon glyphicon-pause");
+                }
+                if(event.data == YT.PlayerState.PAUSED) {
+                    currentlyPlayingIndex = null;
+                    glyphicon.attr("class", "glyphicon glyphicon-play");
                 }
             }
 
@@ -345,9 +372,11 @@ html
                 div.panel-body
                     ul.list-inline(style="text-align: right; margin: 0px;")
                         li(style="float: left;")
-                            span.label.label-success Connected to client app
+                            button.btn.btn-info(onclick="playPauseAction()")
+                                span(id="play-pause-button").glyphicon.glyphicon-play
                         li(style="float: left;")
-                            span.label.label-success Connected to stream
+                            button.btn.btn-info(onclick="skipLinkAction()")
+                                span.glyphicon.glyphicon-step-forward
                         li(style="float: none; display: inline-block;")
                             button.btn.btn-sm.btn-warning(onclick="addCustomLinkAction()")
                                 ul.list-inline
