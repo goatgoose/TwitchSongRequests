@@ -92,8 +92,8 @@ html
                 var newIndexFromPosition = {}; // position : index    1:3, 2:1, (3:2), 4:4 - 1:3, 2:1, 3:4
 
                 var i = 0;
-                for (position in positionFromIndex) {
-                    if (position != deletePosition) {
+                for (position in indexFromPosition) {
+                    if (position[0] != deletePosition) {
                         i = i + 1;
                         if (position < deletePosition) {
                             newPositionFromIndex[indexFromPosition[i]] = i;
@@ -107,6 +107,9 @@ html
 
                 positionFromIndex = newPositionFromIndex;
                 indexFromPosition = newIndexFromPosition;
+
+                console.log(positionFromIndex);
+                console.log(indexFromPosition);
 
                 if(deleteIndex == currentPreview) {
                     currentPreview = null;
