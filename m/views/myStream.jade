@@ -157,6 +157,7 @@ html
                     if (currentPreview != null) {
                         getPlayer(currentPreview).playVideo();
                     } else {
+                        // if no video is previewed play the first one
                         if(getPlayer(indexFromPosition[1]) != null) {
                             previewAction(indexFromPosition[1]);
                             getPlayer(indexFromPosition[1]).playVideo();
@@ -164,6 +165,15 @@ html
                             previewAction(indexFromPosition[1], true);
                         }
                     }
+                }
+            }
+
+            var skipLinkAction = function() {
+                if(currentlyPlayingIndex != null) {
+                    var player = getPlayer(currentlyPlayingIndex);
+                    player.seekTo(player.getDuration() - 1);
+                    currentlyPlayingIndex = null;
+                    player.playVideo();
                 }
             }
 
@@ -261,7 +271,7 @@ html
                 }
 
                 youtubePlayers.push(new YT.Player("youtube-frame" + index.toString(), {
-                    videoId: parseV(tempPlaylist[positionFromIndex[index]].link),
+                    videoId: parseV(tempPlaylist[index].link),
                     playerVars: {
                         autoplay: autoplay
                     },
@@ -321,11 +331,10 @@ html
                 var glyphicon = $("#play-pause-button")
 
                 if(event.data == YT.PlayerState.ENDED) {
-                    var nextPanelPosition = positionFromIndex[currentlyPlayingIndex] + 1
+                    var nextPanelPosition = positionFromIndex[currentlyPlayingIndex] + 1;
                     var nextPanelIndex = indexFromPosition[nextPanelPosition];
-                    console.log(nextPanelIndex.toString());
                     deleteAction(currentlyPlayingIndex);
-                    if(typeof nextPanelPosition != "undefined") {
+                    if(typeof nextPanelIndex != "undefined") {
                         previewAction(nextPanelIndex, true)
                     }
                     currentlyPlayingIndex = null;
