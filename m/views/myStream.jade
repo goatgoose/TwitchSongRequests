@@ -112,6 +112,8 @@ html
                     currentPreview = null;
                 }
 
+                deletePlayer(deleteIndex);
+
                 updateButtons();
 
                 // console.log("positionFromIndex = " + JSON.stringify(positionFromIndex));
@@ -222,8 +224,6 @@ html
                         "onStateChange": onStateChange
                     }
                 }));
-
-                currentlyPlayingIndex = index;
             }
 
             function getPlayer(index) {
@@ -281,7 +281,7 @@ html
                         previewAction(nextPanelIndex, true)
                     }
                 }
-                if(event.data == YT.PlayerState.PLAYING) {
+                if(event.data == YT.PlayerState.PLAYING) { // TODO make more efficient by keeping track of the single video that is playing
                     var embedCode = event.target.getVideoEmbedCode();
                     var id = parsePlayerId(embedCode);
                     var i = 0;
@@ -292,6 +292,7 @@ html
                             player.pauseVideo();
                         }
                     }
+                    currentlyPlayingIndex = id;
                 }
             }
 
@@ -313,6 +314,24 @@ html
                             span.caret
                         ul.dropdown-menu(role="menu")
                             li: a(href="#") Sign Out
+        div.container
+            div.panel.panel-default
+                div.panel-body
+                    ul.list-inline(style="text-align: right; margin: 0px;")
+                        li(style="float: left;")
+                            span.label.label-success Connected to client app
+                        li(style="float: left;")
+                            span.label.label-success Connected to stream
+                        li(style="float: none; display: inline-block;")
+                            button.btn.btn-sm.btn-warning(onclick="")
+                                ul.list-inline
+                                    li: span.glyphicon.glyphicon-plus
+                                    li: p(style="margin: 0px;") Add Link
+                        li(style="float: none; display: inline-block;")
+                            button.btn.btn-sm.btn-info(onlick="")
+                                ul.list-inline
+                                    li: span.glyphicon.glyphicon-cog
+                                    li: p(style="margin: 0px;") Settings
         div.container(id="playlist-container")
             script.
                 var index = 0;
