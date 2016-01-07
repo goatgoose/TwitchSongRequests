@@ -126,6 +126,23 @@ html
                 currentPreview = index;
             }
 
+            var addCustomLinkAction = function() {
+                $("#custom-link-container").show();
+            }
+
+            var addCustomLinkToPlaylistAction = function() {
+                var link = $("#custom-link-textbox").val();
+                var linkObj = {
+                    "donator": "#{username}",
+                    "link": link,
+                    "amount": 0,
+                    "message": ""
+                }
+                addLink(linkObj, Object.keys(indexFromPosition).length + 1);
+
+                $("#custom-link-container").hide();
+            }
+
             var updateButtons = function() {
                 for(position in indexFromPosition) {
                     if(position == 1) {
@@ -199,6 +216,9 @@ html
                                 '</div>' +
                             '</div>' +
                         '</div>');
+
+                positionFromIndex[index] = index;
+                indexFromPosition[index] = index;
 
                 updateButtons();
             };
@@ -284,14 +304,11 @@ html
                 if(event.data == YT.PlayerState.PLAYING) { // TODO make more efficient by keeping track of the single video that is playing
                     var embedCode = event.target.getVideoEmbedCode();
                     var id = parsePlayerId(embedCode);
-                    var i = 0;
-                    for(var playerIndex in youtubePlayers) {
-                        i = i + 1
-                        var player = getPlayer(i);
-                        if(id != i) {
-                            player.pauseVideo();
-                        }
+
+                    if(currentlyPlayingIndex != null) {
+                        getPlayer(currentlyPlayingIndex).pauseVideo();
                     }
+
                     currentlyPlayingIndex = id;
                 }
             }
@@ -323,22 +340,25 @@ html
                         li(style="float: left;")
                             span.label.label-success Connected to stream
                         li(style="float: none; display: inline-block;")
-                            button.btn.btn-sm.btn-warning(onclick="")
+                            button.btn.btn-sm.btn-warning(onclick="addCustomLinkAction()")
                                 ul.list-inline
                                     li: span.glyphicon.glyphicon-plus
                                     li: p(style="margin: 0px;") Add Link
                         li(style="float: none; display: inline-block;")
-                            button.btn.btn-sm.btn-info(onlick="")
+                            button.btn.btn-sm.btn-info(onlick="showSettingsAction()")
                                 ul.list-inline
                                     li: span.glyphicon.glyphicon-cog
                                     li: p(style="margin: 0px;") Settings
+        div.container(id="custom-link-container", style="display: none; margin-bottom: 21px;")
+            div.input-group
+                input.form-control(id="custom-link-textbox", type="text", placeholder="YouTube Link")
+                span.input-group-btn
+                    button.btn.btn-success(type="button", onclick="addCustomLinkToPlaylistAction()") Add To Playlist
         div.container(id="playlist-container")
             script.
                 var index = 0;
                 for (var song in playlist) {
                     index = index + 1;
-                    positionFromIndex[index] = index;
-                    indexFromPosition[index] = index;
 
                     addLink(playlist[song], index);
 
