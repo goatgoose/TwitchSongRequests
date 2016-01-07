@@ -13,6 +13,7 @@ html
 
         script.
             var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
+            var tempPlaylist = {};
 
             var currentPreview;
 
@@ -22,6 +23,10 @@ html
 
             var positionFromIndex = {}; // index : position
             var indexFromPosition = {}; // position : index
+
+            var parseV = function (link) {
+                return link.substring(link.indexOf("watch?v=") + 8);
+            }
 
             var switchPositions = function(baseIndex, offset) {
                 var basePosition = positionFromIndex[baseIndex];
@@ -114,6 +119,8 @@ html
 
                 deletePlayer(deleteIndex);
 
+                delete tempPlaylist[deleteIndex];
+
                 updateButtons();
 
                 // console.log("positionFromIndex = " + JSON.stringify(positionFromIndex));
@@ -183,8 +190,8 @@ html
                                             '</div>' +
                                         '</div>' +
                                         '<div class="col-md-5 well" style="padding: 10px 18px;">' +
-                                            '<p><b>$20.00 from: mEmel0rD420xd</b></p>' +
-                                            '<p>"It was a hot and sultry night at the c9 gaming house. everyone was in bed except for meteos and sneaky. we cant keep doing this, baby says sneaky. put that mouth to use, you dirty tramp replies meteos. LCS starts tmrw, and if you expect me to carry you again, i need to you to suck me to completion. sneaky grins sl*ttily, and goes to town"</p>' +
+                                            '<p><b>$' + song.amount + ' from ' + song.donator + '</b></p>' +
+                                            '<p>' + song.message + '</p>' +
                                         '</div>' +
                                     '</div>' +
                                     '<hr>' +
@@ -220,6 +227,8 @@ html
                 positionFromIndex[index] = index;
                 indexFromPosition[index] = index;
 
+                tempPlaylist[index] = song;
+
                 updateButtons();
             };
 
@@ -235,7 +244,7 @@ html
                 }
 
                 youtubePlayers.push(new YT.Player("youtube-frame" + index.toString(), {
-                    videoId: "B2jVbSI9H4o",
+                    videoId: parseV(tempPlaylist[positionFromIndex[index]].link),
                     playerVars: {
                         autoplay: autoplay
                     },

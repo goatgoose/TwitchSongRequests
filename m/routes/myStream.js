@@ -9,19 +9,19 @@ var testPlaylist = {
     1: {
         "donator": "testDonator1",
         "link": "https://www.youtube.com/watch?v=B2jVbSI9H4o",
-        "amount": 20,
+        "amount": "20.00",
         "message": "test message 1"
     },
     2: {
         "donator": "testDonator2",
         "link": "https://www.youtube.com/watch?v=YHL_Bk60F_4",
-        "amount": 20,
+        "amount": "15.00",
         "message": "test message 2"
     },
     3: {
         "donator": "testDonator3",
         "link": "https://www.youtube.com/watch?v=hZ_H-_NI4SU",
-        "amount": 20,
+        "amount": "100.00",
         "message": "test message 3"
     }
 };
