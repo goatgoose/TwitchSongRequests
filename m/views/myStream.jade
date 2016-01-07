@@ -108,9 +108,6 @@ html
                 positionFromIndex = newPositionFromIndex;
                 indexFromPosition = newIndexFromPosition;
 
-                console.log(positionFromIndex);
-                console.log(indexFromPosition);
-
                 if(deleteIndex == currentPreview) {
                     currentPreview = null;
                 }
@@ -230,11 +227,11 @@ html
             }
 
             function getPlayer(index) {
-                for(player in youtubePlayers) {
+                for(var player in youtubePlayers) {
                     var panelId = youtubePlayers[player]["f"].id;
                     var id = parseInt(panelId.substring(13), 10);
                     if(id == index) {
-                        return player;
+                        return youtubePlayers[player];
                     }
                 }
                 return null;
@@ -271,9 +268,15 @@ html
                     }
                 }
                 if(event.data == YT.PlayerState.PLAYING) {
-                    for(player in youtubePlayers) {
-                        var embedCode = event.target.getVideoEmbedCode();
-                        var id = parsePlayerId(embedCode);
+                    var embedCode = event.target.getVideoEmbedCode();
+                    var id = parsePlayerId(embedCode);
+                    var i = 0;
+                    for(var playerIndex in youtubePlayers) {
+                        i = i + 1
+                        var player = getPlayer(i);
+                        if(id != i) {
+                            player.pauseVideo();
+                        }
                     }
                 }
             }
