@@ -142,7 +142,7 @@ html
                 }
             }
 
-            var addLink; addLink = function(song, index) {
+            var addLink = function(song, index) {
                 $("#playlist-container").append(
                         //language="HTML"
                         '<div class="panel panel-info" id="panel' + index.toString() + '">' +
@@ -230,7 +230,6 @@ html
             }
 
             function getPlayer(index) {
-                console.log(youtubePlayers);
                 for(player in youtubePlayers) {
                     var panelId = youtubePlayers[player]["f"].id;
                     var id = parseInt(panelId.substring(13), 10);
