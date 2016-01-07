@@ -147,6 +147,12 @@ html
                 }
                 addLink(linkObj, Object.keys(indexFromPosition).length + 1);
 
+                $("#custom-link-textbox").val("");
+                $("#custom-link-container").hide();
+            }
+
+            var closeAddCustomLinkAction = function() {
+                $("#custom-link-textbox").val("");
                 $("#custom-link-container").hide();
             }
 
@@ -398,7 +404,10 @@ html
                                     li: p(style="margin: 0px;") Settings
         div.container(id="custom-link-container", style="display: none; margin-bottom: 21px;")
             div.input-group
-                input.form-control(id="custom-link-textbox", type="text", placeholder="YouTube Link")
+                span.input-group-btn
+                    button.btn.btn-sm.btn-default(type="button", onclick="closeAddCustomLinkAction()")
+                        span.glyphicon.glyphicon-remove
+                input.form-control(name="custom-link-textbox" id="custom-link-textbox", type="text", placeholder="YouTube Link")
                 span.input-group-btn
                     button.btn.btn-success(type="button", onclick="addCustomLinkToPlaylistAction()") Add To Playlist
         div.container(id="playlist-container")
