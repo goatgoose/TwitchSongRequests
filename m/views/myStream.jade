@@ -237,6 +237,20 @@ html
                 return null;
             }
 
+            function deletePlayer(index) {
+                for(var player in youtubePlayers) {
+                    var panelId = youtubePlayers[player]["f"].id;
+                    var id = parseInt(panelId.substring(13), 10);
+                    if (id == index) {
+                        delete youtubePlayers[player];
+                        if(currentlyPlayingIndex == index) {
+                            currentlyPlayingIndex = null;
+                        }
+                        return;
+                    }
+                }
+            }
+
             function parsePlayerId(embedCode) {
                 return parseInt(embedCode.substring(25, embedCode.indexOf(" frameborder") - 1), 10);
             }
