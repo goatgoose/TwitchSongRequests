@@ -25,11 +25,11 @@ html
             var positionFromIndex = {}; // index : position
             var indexFromPosition = {}; // position : index
 
-            var parseV = function (link) {
+            function parseV(link) {
                 return link.substring(link.indexOf("watch?v=") + 8);
             }
 
-            var switchPositions = function(baseIndex, offset) {
+            function switchPositions(baseIndex, offset) {
                 var basePosition = positionFromIndex[baseIndex];
                 var swapPosition = basePosition + offset;
                 var swapIndex = indexFromPosition[swapPosition];
@@ -53,7 +53,7 @@ html
                 // console.log("indexFromPosition = " + JSON.stringify(indexFromPosition));
             }
 
-            var previewAction = function(index, playAutomatically) {
+            function previewAction(index, playAutomatically) {
                 if(typeof playAutomatically == "undefined") {
                     playAutomatically = false;
                 }
@@ -77,19 +77,19 @@ html
                 }
             }
 
-            var moveDownAction = function(index) {
+            function moveDownAction(index) {
                 switchPositions(index, 1);
 
                 updateButtons();
             }
 
-            var moveUpAction = function(index) {
+            function moveUpAction(index) {
                 switchPositions(index, -1);
 
                 updateButtons();
             }
 
-            var deleteAction = function(deleteIndex) {
+            function deleteAction(deleteIndex) {
                 document.getElementById("panel" + deleteIndex.toString()).remove();
 
                 var deletePosition = positionFromIndex[deleteIndex];
@@ -128,17 +128,17 @@ html
                 // console.log("indexFromPosition = " + JSON.stringify(indexFromPosition));
             }
 
-            var hidePreviewAction = function(index) {
+            function hidePreviewAction(index) {
                 document.getElementById("hide-preview-button" + index.toString()).style.display = "none";
                 document.getElementById("preview-panel" + index.toString()).style.display = "none";
                 currentPreview = null;
             }
 
-            var addCustomLinkAction = function() {
+            function addCustomLinkAction() {
                 $("#custom-link-container").show();
             }
 
-            var addCustomLinkToPlaylistAction = function() {
+            function addCustomLinkToPlaylistAction() {
                 var link = $("#custom-link-textbox").val();
                 var linkObj = {
                     "donator": "#{username}",
@@ -152,12 +152,12 @@ html
                 $("#custom-link-container").hide();
             }
 
-            var closeAddCustomLinkAction = function() {
+            function closeAddCustomLinkAction() {
                 $("#custom-link-textbox").val("");
                 $("#custom-link-container").hide();
             }
 
-            var playPauseAction = function () {
+            function playPauseAction() {
                 if (currentlyPlayingIndex != null) {
                     getPlayer(currentlyPlayingIndex).pauseVideo();
                 } else {
@@ -175,7 +175,7 @@ html
                 }
             }
 
-            var skipLinkAction = function() {
+            function skipLinkAction() {
                 if(currentlyPlayingIndex != null) {
                     var player = getPlayer(currentlyPlayingIndex);
                     player.seekTo(player.getDuration() - 1);
@@ -184,7 +184,7 @@ html
                 }
             }
 
-            var updateButtons = function() {
+            function updateButtons() {
                 for(position in indexFromPosition) {
                     if(position == 1) {
                         document.getElementById("move-up-button" + indexFromPosition[position]).style.display = "none";
@@ -199,7 +199,7 @@ html
                 }
             }
 
-            var addLink = function(song, index) {
+            function addLink(song, index) {
                 $("#playlist-container").append(
                         //language="HTML"
                         '<div class="panel panel-info" id="panel' + index.toString() + '">' +
