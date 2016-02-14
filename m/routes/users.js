@@ -7,18 +7,17 @@ var router = express.Router();
 /*
  * GET user.
  */
-router.get('/:user', function(req, res) {
+router.get('/:username', function(req, res) {
     req.mongoClient.connect(req.MONGODB_URL, function(err, db) {
         if(err) {
             console.log("can't connect to database");
         }
         var collection = db.collection("users");
-        collection.find({'username':'goatgoose1142'}).toArray(function(err, docs) {
+        collection.find({'username':req.params.username}).toArray(function(err, docs) {
             var doc = docs[0];
             res.send(JSON.stringify(doc));
         });
     })
-
 });
 
 module.exports = router;
