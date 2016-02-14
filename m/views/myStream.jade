@@ -12,7 +12,8 @@ html
         script(src="https://www.youtube.com/iframe_api")
 
         script.
-            var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
+            //var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
+            var playlist = "";
             var tempPlaylist = {};
 
             var currentPreview;
@@ -276,6 +277,7 @@ html
                     autoplay = 1;
                 }
 
+                console.log(tempPlaylist);
                 youtubePlayers.push(new YT.Player("youtube-frame" + index.toString(), {
                     videoId: parseV(tempPlaylist[index].link),
                     playerVars: {
@@ -364,6 +366,25 @@ html
                 }
             }
 
+            $(document).ready(function() {
+                $.getJSON('/users/' + "!{username}", function(data) {
+                    if(data) {
+                        playlist = data.playlist;
+                        var index = 0;
+                        for (var song in playlist) {
+                            console.log(song);
+                            index = index + 1;
+
+                            addLink(playlist[song], index);
+
+                            if (index == 1) {
+                                previewAction(index);
+                            }
+                        }
+                    }
+                });
+            });
+
         nav.navbar.navbar-default(role="navigation")
             .navbar-header
                 button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar-inverse", aria-expanded="false", aria-controls="navbar")
@@ -411,14 +432,3 @@ html
                 span.input-group-btn
                     button.btn.btn-success(type="button", onclick="addCustomLinkToPlaylistAction()") Add To Playlist
         div.container(id="playlist-container")
-            script.
-                var index = 0;
-                for (var song in playlist) {
-                    index = index + 1;
-
-                    addLink(playlist[song], index);
-
-                    if (index == 1) {
-                        previewAction(index);
-                    }
-                }
