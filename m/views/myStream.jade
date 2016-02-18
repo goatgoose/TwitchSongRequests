@@ -16,7 +16,6 @@ html
 
         script.
             //var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
-            var playlist = {};
             var tempPlaylist = {};
 
             var currentPreview;
@@ -274,6 +273,26 @@ html
                 updateButtons();
             };
 
+            $(document).ready(function () {
+                $.getJSON('/playlists/' + "!{username}", function (playlist) {
+                    console.log(playlist);
+                    if (playlist) {
+                        var index = 0;
+                        for (var song in playlist) {
+                            console.log(song);
+                            index = index + 1;
+
+                            addLink(playlist[song], index);
+
+                            if (index == 1) {
+                                previewAction(index);
+                            }
+                        }
+                    }
+                    console.log(tempPlaylist);
+                });
+            });
+
             // youtube player api
 
             function addPlayer(index, autoplay) {
@@ -285,7 +304,6 @@ html
                     autoplay = 1;
                 }
 
-                console.log(tempPlaylist);
                 youtubePlayers.push(new YT.Player("youtube-frame" + index.toString(), {
                     videoId: parseV(tempPlaylist[index].link),
                     playerVars: {
@@ -328,7 +346,6 @@ html
             }
 
             function onYouTubeIframeAPIReady() {
-                addPlayer(1);
                 youtubeAPIIsReady = true;
             }
 
@@ -373,25 +390,6 @@ html
                     glyphicon.attr("class", "glyphicon glyphicon-play");
                 }
             }
-
-            $(document).ready(function() {
-                $.getJSON('/users/' + "!{username}", function(data) {
-                    if(data) {
-                        playlist = data.playlist;
-                        var index = 0;
-                        for (var song in playlist) {
-                            console.log(song);
-                            index = index + 1;
-
-                            addLink(playlist[song], index);
-
-                            if (index == 1) {
-                                previewAction(index);
-                            }
-                        }
-                    }
-                });
-            });
 
         nav.navbar.navbar-default(role="navigation")
             .navbar-header

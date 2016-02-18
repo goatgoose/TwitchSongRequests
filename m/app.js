@@ -13,7 +13,7 @@ var loginRoute = require('./routes/login');
 var myStreamRoute = require('./routes/myStream');
 var successRoute = require('./routes/success');
 var moderatedStreamsRoute = require('./routes/moderatedStreams');
-var usersRoute = require('./routes/users');
+var playlistsRoute = require('./routes/playlists');
 
 var app = express();
 
@@ -40,7 +40,7 @@ app.use('/login', loginRoute);
 app.use('/myStream', myStreamRoute);
 app.use('/success', successRoute);
 app.use('/moderatedStreams', moderatedStreamsRoute);
-app.use('/users', usersRoute);
+app.use('/playlists', playlistsRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
