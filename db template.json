@@ -1,0 +1,68 @@
+{ 	
+	"_id" : ObjectId("569a6a2d95d447647d8e01f7"), 
+	"username" : "goatgoose1142", 
+	"playlist" : { 
+			"1" : { 
+			"donator" : "testDonator1", 
+			"link" : "https://www.youtube.com/watch?v=B2jVbSI9H4o", 
+			"amount" : "20.00", 
+			"message" : "test message 1"
+			}, 
+			"2" : { 
+				"donator" : "testDonator2", 
+				"link" : "https://www.youtube.com/watch?v=YHL_Bk60F_4", 
+				"amount" : "15.00", 
+				"message" : "test message 2" 
+			}, 
+			"3" : { 
+				"donator" : "testDonator3", 
+				"link" : "https://www.youtube.com/watch?v=hZ_H-_NI4SU", 
+				"amount" : "100.00", 
+				"message" : "test message 3" 
+			} 
+		} 
+	}
+
+{
+	"donator" : "testDonator1", 
+	"link" : "https://www.youtube.com/watch?v=B2jVbSI9H4o", 
+	"amount" : "20.00", 
+	"message" : "test message 1",
+	"position" : 1
+}
+{"donator" : "testDonator1", "link" : "https://www.youtube.com/watch?v=B2jVbSI9H4o", "amount" : "20.00", "message" : "test message 1", "position" : 1 }
+
+{
+	"donator" : "testDonator2", 
+	"link" : "https://www.youtube.com/watch?v=YHL_Bk60F_4", 
+	"amount" : "15.00", 
+	"message" : "test message 2",
+	"position" : 2
+}
+{"donator" : "testDonator2", "link" : "https://www.youtube.com/watch?v=YHL_Bk60F_4", "amount" : "15.00", "message" : "test message 2", "position" : 2 }
+
+{
+	"donator" : "testDonator3", 
+	"link" : "https://www.youtube.com/watch?v=hZ_H-_NI4SU", 
+	"amount" : "100.00", 
+	"message" : "test message 3",
+	"position" : 3
+}
+{"donator" : "testDonator3", "link" : "https://www.youtube.com/watch?v=hZ_H-_NI4SU", "amount" : "100.00", "message" : "test message 3", "position" : 3 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -11,9 +11,12 @@ html
         script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
         script(src="https://www.youtube.com/iframe_api")
 
+        form(name="update-playlist-form", id="update-playlist-form" method="post")
+            input(type="hidden", name="postPlaylistInput", id="postPlaylistInput")
+
         script.
             //var playlist = !{JSON.parse(JSON.stringify(playlistCache))};
-            var playlist = "";
+            var playlist = {};
             var tempPlaylist = {};
 
             var currentPreview;
@@ -24,6 +27,11 @@ html
 
             var positionFromIndex = {}; // index : position
             var indexFromPosition = {}; // position : index
+
+            function postPlaylist() {
+                var postPlaylistInput = document.getElementById("postPlaylistInput");
+                postPlaylistInput.value = tempPlaylist;
+            }
 
             function parseV(link) {
                 return link.substring(link.indexOf("watch?v=") + 8);
