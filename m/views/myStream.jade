@@ -151,7 +151,8 @@ html
                     "donator": "#{username}",
                     "link": link,
                     "amount": 0,
-                    "message": ""
+                    "message": "",
+                    "position": Object.keys(tempPlaylist).length + 1
                 }
                 addLink(linkObj, Object.keys(indexFromPosition).length + 1);
 
@@ -275,21 +276,16 @@ html
 
             $(document).ready(function () {
                 $.getJSON('/playlists/' + "!{username}", function (playlist) {
-                    console.log(playlist);
                     if (playlist) {
-                        var index = 0;
-                        for (var song in playlist) {
-                            console.log(song);
-                            index = index + 1;
-
-                            addLink(playlist[song], index);
-
-                            if (index == 1) {
-                                previewAction(index);
+                        for(var i = 0; i < Object.keys(playlist).length; i++) {
+                            console.log(i);
+                            addLink(playlist[i], playlist[i].position);
+                            if (i == 1) {
+                                previewAction(i);
                             }
                         }
+                        console.log(tempPlaylist);
                     }
-                    console.log(tempPlaylist);
                 });
             });
 
